@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+*.db-shm
+*.db-wal
+.DS_Store
+.vscode/
+.idea/
+nohup.out
+vite.log
+server.log

@@ -6,7 +6,12 @@
     "dev": "node app.js",
     "start": "node app.js",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "keywords": [],
   "author": "",
