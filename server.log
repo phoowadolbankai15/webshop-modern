@@ -1,0 +1,5 @@
+nohup: ignoring input
+[dotenv@17.3.1] injecting env (6) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+✅ WebShop Modern running on http://localhost:3000
+📊 Database: webshop.db
+👤 Admin: navydesign / navydesignpage

@@ -1,0 +1,41 @@
+{
+  "name": "webshop_modern",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node app.js",
+    "start": "node app.js",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Modern webshop platform with Node.js and React",
+  "dependencies": {
+    "@trpc/client": "^11.15.0",
+    "@trpc/server": "^11.15.0",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.8.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.1",
+    "express": "^5.2.1",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.20.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "sqlite3": "^6.0.1",
+    "superjson": "^2.2.6",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.0.2"
+  }
+}

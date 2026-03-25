@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha System - WebShop Modern</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .gacha-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+        }
+
+        .gacha-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .gacha-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+        }
+
+        .gacha-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .gacha-tab {
+            padding: 12px 30px;
+            border: 2px solid #7c3aed;
+            background: transparent;
+            color: #fff;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .gacha-tab:hover {
+            background: #7c3aed;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .gacha-tab.active {
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.8);
+            border-color: #3b82f6;
+        }
+
+        /* ============ NETFLIX GACHA ============ */
+
+        .netflix-gacha {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .box-container {
+            perspective: 1000px;
+            width: 200px;
+            height: 200px;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .box.open {
+            animation: boxOpen 0.8s ease-out forwards;
+        }
+
+        @keyframes boxOpen {
+            0% {
+                transform: rotateX(0) rotateY(0) scale(1);
+            }
+            50% {
+                transform: rotateX(20deg) rotateY(20deg) scale(1.05);
+            }
+            100% {
+                transform: rotateX(0) rotateY(180deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        .box-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 3px solid;
+        }
+
+        .box-front {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-color: #fbbf24;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.6), inset 0 0 20px rgba(251, 191, 36, 0.3);
+            animation: boxPulse 2s infinite;
+        }
+
+        .box-back {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border-color: #fbbf24;
+            transform: rotateY(180deg);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+        }
+
+        @keyframes boxPulse {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(239, 68, 68, 0.6), inset 0 0 20px rgba(251, 191, 36, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(239, 68, 68, 0.8), inset 0 0 30px rgba(251, 191, 36, 0.5);
+                transform: scale(1.05);
+            }
+        }
+
+        .particles {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: particleFloat 1s ease-out forwards;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        /* ============ ROV GACHA ============ */
+
+        .rov-gacha {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            gap: 10px;
+            perspective: 1000px;
+        }
+
+        .grid-item {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            border: 2px solid #fbbf24;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.5);
+            animation: gridPulse 2s infinite;
+        }
+
+        .grid-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.8);
+        }
+
+        .grid-item.revealed {
+            animation: gridReveal 0.6s ease-out forwards;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(124, 58, 237, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(124, 58, 237, 0.8);
+            }
+        }
+
+        @keyframes gridReveal {
+            0% {
+                transform: scale(1) rotateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2) rotateY(90deg);
+            }
+            100% {
+                transform: scale(1) rotateY(180deg);
+                opacity: 1;
+                background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            }
+        }
+
+        /* ============ REWARD DISPLAY ============ */
+
+        .reward-display {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid #7c3aed;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
+        }
+
+        .reward-display.show {
+            animation: rewardShow 0.8s ease-out;
+        }
+
+        @keyframes rewardShow {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotateZ(-10deg);
+            }
+            50% {
+                transform: scale(1.1) rotateZ(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateZ(0);
+            }
+        }
+
+        .reward-name {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .reward-description {
+            font-size: 1rem;
+            color: #cbd5e1;
+        }
+
+        /* ============ BUTTON ============ */
+
+        .spin-button {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #7c3aed, #3b82f6);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .spin-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.8);
+            background: linear-gradient(135deg, #3b82f6, #7c3aed);
+        }
+
+        .spin-button:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ============ INFO ============ */
+
+        .info-box {
+            background: rgba(124, 58, 237, 0.1);
+            border-left: 4px solid #7c3aed;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(124, 58, 237, 0.3);
+            border-radius: 50%;
+            border-top-color: #7c3aed;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============ RESPONSIVE ============ */
+
+        @media (max-width: 600px) {
+            .gacha-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .box-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(3, 60px);
+            }
+
+            .grid-item {
+                width: 60px;
+                height: 60px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gacha-container">
+        <div class="gacha-header">
+            <h1>🎰 GACHA SYSTEM 🎰</h1>
+            <p>สุ่มรับรางวัลพิเศษ</p>
+        </div>
+
+        <div class="gacha-tabs">
+            <button class="gacha-tab active" onclick="switchTab('netflix')">
+                🎬 Netflix Gacha
+            </button>
+            <button class="gacha-tab" onclick="switchTab('rov')">
+                ⚔️ ROV ID Gacha
+            </button>
+        </div>
+
+        <!-- Netflix Gacha -->
+        <div id="netflix-tab" class="netflix-gacha" style="display: block;">
+            <div class="box-container">
+                <div class="box" id="netflix-box">
+                    <div class="box-face box-front">
+                        <span>🎁</span>
+                    </div>
+                    <div class="box-face box-back">
+                        <span id="netflix-reward">?</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="spin-button" onclick="spinNetflix()" id="netflix-btn">
+                🎬 สุ่ม Netflix
+            </button>
+
+            <div class="reward-display" id="netflix-reward-display" style="display: none;">
+                <div class="reward-name" id="netflix-reward-name">Netflix 30 วัน</div>
+                <div class="reward-description">ยินดีด้วย! คุณได้รับรางวัล</div>
+            </div>
+
+            <div class="info-box">
+                💡 ต้องใช้ 100 แต้ม | อัตราการชนะ: 30 วัน (0.9%), 14 วัน (0.3%), 1 วัน (1%), ไม่ได้รางวัล (97.8%)
+            </div>
+        </div>
+
+        <!-- ROV Gacha -->
+        <div id="rov-tab" class="rov-gacha" style="display: none;">
+            <div class="grid-container" id="rov-grid">
+                <!-- Grid items will be generated by JavaScript -->
+            </div>
+
+            <button class="spin-button" onclick="spinROV()" id="rov-btn">
+                ⚔️ สุ่ม ROV ID
+            </button>
+
+            <div class="reward-display" id="rov-reward-display" style="display: none;">
+                <div class="reward-name" id="rov-reward-name">ROV Mythic</div>
+                <div class="reward-description">ยินดีด้วย! คุณได้รับไอดี</div>
+            </div>
+
+            <div class="info-box">
+                💡 ต้องใช้ 100 แต้ม | อัตราการชนะ: God (0.001%), Mythic (0.001%), Legend (0.3%), Epic (0.9%), Elite (0.95%), Master (5%), Warrior (20%), Challenger (8%), ไม่ได้รางวัล (64.799%)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Rewards data
+        const netflixRewards = [
+            { name: '1 วัน', rate: 1, emoji: '📺' },
+            { name: '14 วัน', rate: 0.3, emoji: '📺' },
+            { name: '30 วัน', rate: 0.9, emoji: '📺' },
+            { name: 'ไม่ได้รางวัล', rate: 97.8, emoji: '❌' }
+        ];
+
+        const rovRewards = [
+            { name: 'God ID', rate: 0.001, emoji: '👑' },
+            { name: 'Mythic', rate: 0.001, emoji: '⭐' },
+            { name: 'Legend', rate: 0.3, emoji: '🏆' },
+            { name: 'Epic', rate: 0.9, emoji: '💎' },
+            { name: 'Elite', rate: 0.95, emoji: '⚡' },
+            { name: 'Master', rate: 5, emoji: '🎖️' },
+            { name: 'Warrior', rate: 20, emoji: '⚔️' },
+            { name: 'Challenger', rate: 8, emoji: '🗡️' },
+            { name: 'ไม่ได้รางวัล', rate: 64.799, emoji: '❌' }
+        ];
+
+        function switchTab(tab) {
+            document.querySelectorAll('[id$="-tab"]').forEach(el => el.style.display = 'none');
+            document.getElementById(tab + '-tab').style.display = 'flex';
+
+            document.querySelectorAll('.gacha-tab').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function getRandomReward(rewards) {
+            const rand = Math.random() * 100;
+            let cumulative = 0;
+
+            for (let reward of rewards) {
+                cumulative += reward.rate;
+                if (rand < cumulative) {
+                    return reward;
+                }
+            }
+
+            return rewards[rewards.length - 1];
+        }
+
+        function createParticles(x, y, color) {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.background = color;
+                particle.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+                particle.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+                document.body.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function spinNetflix() {
+            const btn = document.getElementById('netflix-btn');
+            const box = document.getElementById('netflix-box');
+            const display = document.getElementById('netflix-reward-display');
+            const rewardName = document.getElementById('netflix-reward-name');
+
+            btn.disabled = true;
+
+            // Animate box
+            box.classList.remove('open');
+            setTimeout(() => box.classList.add('open'), 10);
+
+            // Get reward
+            const reward = getRandomReward(netflixRewards);
+
+            // Show particles
+            const boxRect = box.getBoundingClientRect();
+            createParticles(boxRect.left + boxRect.width / 2, boxRect.top + boxRect.height / 2, '#ef4444');
+
+            // Show reward after animation
+            setTimeout(() => {
+                rewardName.textContent = reward.emoji + ' ' + reward.name;
+                display.classList.add('show');
+                display.style.display = 'flex';
+                btn.disabled = false;
+                box.classList.remove('open');
+            }, 1000);
+        }
+
+        function spinROV() {
+            const btn = document.getElementById('rov-btn');
+            const grid = document.getElementById('rov-grid');
+            const display = document.getElementById('rov-reward-display');
+            const rewardName = document.getElementById('rov-reward-name');
+
+            btn.disabled = true;
+
+            // Clear previous
+            grid.innerHTML = '';
+
+            // Create grid items
+            for (let i = 0; i < 9; i++) {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.textContent = '?';
+                grid.appendChild(item);
+            }
+
+            // Get reward
+            const reward = getRandomReward(rovRewards);
+            const winIndex = Math.floor(Math.random() * 9);
+
+            // Reveal animation
+            let revealed = 0;
+            const items = grid.querySelectorAll('.grid-item');
+
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('revealed');
+                    if (index === winIndex) {
+                        item.textContent = reward.emoji;
+                        item.style.background = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
+                        createParticles(item.getBoundingClientRect().left + 40, item.getBoundingClientRect().top + 40, '#fbbf24');
+                    } else {
+                        item.textContent = '❌';
+                    }
+                    revealed++;
+
+                    if (revealed === 9) {
+                        setTimeout(() => {
+                            rewardName.textContent = reward.emoji + ' ' + reward.name;
+                            display.classList.add('show');
+                            display.style.display = 'flex';
+                            btn.disabled = false;
+                        }, 500);
+                    }
+                }, index * 100);
+            });
+        }
+
+        // Initialize ROV grid
+        document.addEventListener('DOMContentLoaded', () => {
+            const rovGrid = document.getElementById('rov-grid');
+            for (let i = 0; i < 9; i++) {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.textContent = '?';
+                rovGrid.appendChild(item);
+            }
+        });
+    </script>
+</body>
+</html>
